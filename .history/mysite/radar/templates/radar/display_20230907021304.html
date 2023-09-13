@@ -1,0 +1,22 @@
+<!doctype html>
+{% load static %}
+
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'radar/style.css' %}">
+    
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    
+    <div>
+        <!-- <img src="{% static 'radar/01FR043-full.png' %}"> -->
+        <img id="frame" alt="generated_image" src="{% static 'radar/radar_image.png' %}">
+    </div>
+    <a href="{% url 'radar:index' %}">Back to Home</a>
+    <script src="{% static 'radar/script.js' %}"></script>
+</body>
+
+</html>

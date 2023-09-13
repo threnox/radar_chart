@@ -1,0 +1,21 @@
+<!doctype html>
+{% load static %}
+
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'radar/style.css' %}">
+    
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <a href="{% url 'radar:index' %}">ホームへ戻る</a>
+    <div>
+        <!-- <img src="{% static 'radar/01FR043-full.png' %}"> -->
+        <img id="frame" src="{% static 'radar/radar_image.png' %}">
+    </div>
+    <script src="{% static 'radar/script.js' %}"></script>
+</body>
+
+</html>

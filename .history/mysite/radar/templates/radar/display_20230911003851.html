@@ -1,0 +1,10 @@
+{% extends 'radar/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        <img id="frame" class="radar-image" alt="generated_image" src="{% static 'radar/radar_image.png' %}">
+    </div>
+    <a href="{% url 'radar:index' %}">Back to Home</a>
+    <script src="{% static 'radar/script.js' %}"></script>
+{% endblock %}

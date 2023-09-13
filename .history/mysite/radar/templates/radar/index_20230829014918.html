@@ -1,0 +1,20 @@
+<!doctype html>
+{% load static %}
+
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'radar/style.css' %}">
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <div>
+        {% csrf_token %}
+        {{ form }}
+        <img src="{% static 'radar/test_image.png' %}">
+    </div>
+
+</body>
+
+</html>

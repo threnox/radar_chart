@@ -1,0 +1,10 @@
+{% extends 'radar/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="display">
+        <a href="{{ request.session.radar_image }}" target="_blank" rel="noopener">
+            <img id="modal-content" class="display__radar-image" alt="generated_image" src="{{ request.session.radar_image }}" decoding="async" width="800" height="800">
+        </a>
+        <p class="display__text">( Click image to expand )</p>
+    </div>
+{% endblock %}

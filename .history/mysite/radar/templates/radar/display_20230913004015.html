@@ -1,0 +1,43 @@
+{% extends 'radar/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- <div id="modal" aria-hidden="true">
+        <div tabindex="-1" data-micromodal-close>
+            <div role="dialog" aria-modal="true" aria-labelledby="modal-title" >
+                <div>
+                    <h2 id="modal-title">Modal Title</h2>
+                    <button type="button" aria-label="Close modal" data-micromodal-close></button>
+                </div>
+                <img id="modal-content" class="radar-image" alt="generated_image" src="{{ request.session.radar_image }}" decoding="async" width="800" height="800">
+                <button type="button" aria-label="Close modal" data-micromodal-close></button>
+            </div>
+        </div>
+    </div>
+    <button type="button" data-micromodal-trigger="modal">Open</button> -->
+    <div id="modal-1" class="modal" aria-hidden="true">
+
+        <!-- [2] -->
+        <div tabindex="-1" data-micromodal-close>
+      
+          <!-- [3] -->
+          <div role="dialog" aria-modal="true" aria-labelledby="modal-1-title" >
+      
+      
+            <header>
+              <h2 id="modal-1-title">
+                Modal Title
+              </h2>
+      
+              <!-- [4] -->
+              <button aria-label="Close modal" data-micromodal-close></button>
+            </header>
+      
+            <div id="modal-1-content">
+              Modal Content
+            </div>
+      
+          </div>
+        </div>
+      </div>
+{% endblock %}

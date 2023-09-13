@@ -1,0 +1,9 @@
+{% extends 'radar/base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="not-found">
+        <h2>このページは存在しません</h2>
+        <img src="{% static 'radar/not-found.png' %}" alt="404エラー">
+    </section>
+{% endblock %}

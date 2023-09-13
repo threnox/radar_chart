@@ -1,0 +1,8 @@
+{% extends 'radar/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div>
+        <img id="frame" class="radar-image" alt="generated_image" src="{{ request.session.radar_image }}">
+    </div>
+{% endblock %}
