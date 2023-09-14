@@ -89,8 +89,9 @@ body {
     background-blend-mode: lighten;
 }
 .errorlist li {
-    text-decoration: underline;
+    color: #BA2020;
     font-size: 1rem;
+    text-decoration: underline;
 }
 .pulldown {
     margin: 0 auto;
