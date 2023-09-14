@@ -2,7 +2,7 @@ import numpy as np
 
 # 必ず大文字小文字関係なくアルファベット順で集計すること！！！
 
-csv_file = 'radar/views_sub/2023_LoL_esports0808.csv'
+csv_file = 'radar/views_sub/2023_LoL_esports.csv'
 
 # LEC Winter
 LEC_top_solokill_winter = np.array([6, 3, 3, 6, 5, 7, 3, 4, 3, 0])
