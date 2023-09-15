@@ -33,14 +33,13 @@ ALLOWED_HOSTS = ['localhost', '.pythonanywhere.com', 'threnoxpy.pythonanywhere.c
 # Application definition
 
 INSTALLED_APPS = [
-    'radar', # 上に書く
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'radar',
 ]
 
 MIDDLEWARE = [
