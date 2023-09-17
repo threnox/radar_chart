@@ -32,9 +32,8 @@ ALLOWED_HOSTS = ['localhost', '.pythonanywhere.com', 'threnox3.pythonanywhere.co
 
 # Application definition
 
-# 追加のアプリは上に書く
 INSTALLED_APPS = [
-    'radar',
+    'radar', # 上に書く
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,8 +120,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# 追加
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'static' # 追加
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
