@@ -37,7 +37,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 # ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-ALLOWED_HOSTS = ['radar-chart.onrender.com']
+ALLOWED_HOSTS = ['.onrender.com']
 
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 # ALLOWED_HOSTS = []
