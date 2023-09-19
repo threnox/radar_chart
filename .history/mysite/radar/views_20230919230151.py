@@ -1,5 +1,13 @@
 from django.shortcuts import redirect, render
 # from django.http import HttpResponse, HttpResponseRedirect, FileResponse, HttpResponseRedirect
+import os
+from os.path import dirname, abspath
+import sys
+
+# job_exex.pyから3つ上のディレクトリの絶対パスを取得し、sys.pathに登録する
+parent_dir = dirname(dirname(abspath(__file__))) # 追加
+if parent_dir not in sys.path: # 追加
+    sys.path.append(parent_dir) # 追加
 from .views_sub import create_radar_chart as crc
 from .forms import ParameterForm
 

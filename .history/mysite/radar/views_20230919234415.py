@@ -1,8 +1,13 @@
 from django.shortcuts import redirect, render
 # from django.http import HttpResponse, HttpResponseRedirect, FileResponse, HttpResponseRedirect
+import os
+from os.path import dirname, abspath
+import sys
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# sys.path.append('../views_sub')
 from .views_sub import create_radar_chart as crc
 from .forms import ParameterForm
-
+sys.path
 
 def generator(request):
 
