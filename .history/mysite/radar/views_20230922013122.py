@@ -20,16 +20,16 @@ def generator(request):
                     radar_image = top.create_radar()
                 elif position == 'jungle':
                     jng = crc.JngRadar(league, split, min_game_count)
-                    radar_image = jng.create_radar()
+                    jng.create_radar()
                 elif position == 'mid':
                     mid = crc.MidRadar(league, split, min_game_count)
-                    radar_image = mid.create_radar()
+                    mid.create_radar()
                 elif position == 'bot':
                     bot = crc.BotRadar(league, split, min_game_count)
-                    radar_image = bot.create_radar()
+                    bot.create_radar()
                 elif position == 'support':
                     sup = crc.SupRadar(league, split, min_game_count)
-                    radar_image = sup.create_radar()
+                    sup.create_radar()
                 # request.session['radar_image'] = 'media/radar_image' + crc.rnd + '.png'
                 # request.session['radar_image'] = '/radar_image' + crc.rnd + '.png'
                 request.session['radar_image'] = radar_image

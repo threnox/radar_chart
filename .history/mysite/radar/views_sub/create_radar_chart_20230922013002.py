@@ -649,14 +649,10 @@ class JngRadar(JngDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-        #     if os.path.isfile(p):
-        #         os.remove(p)
-        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
-
-        graph = output()
-        return graph
-
+        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+            if os.path.isfile(p):
+                os.remove(p)
+        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
         # plt.show()
 
 
@@ -740,14 +736,10 @@ class MidRadar(MidDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-        #     if os.path.isfile(p):
-        #         os.remove(p)
-        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
-
-        graph = output()
-        return graph
-
+        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+            if os.path.isfile(p):
+                os.remove(p)
+        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
         # plt.show()
 
 
@@ -832,14 +824,10 @@ class BotRadar(BotDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-        #     if os.path.isfile(p):
-        #         os.remove(p)
-        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
-
-        graph = output()
-        return graph
-
+        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+            if os.path.isfile(p):
+                os.remove(p)
+        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
         # plt.show()
 
 
@@ -925,12 +913,8 @@ class SupRadar(SupDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-        #     if os.path.isfile(p):
-        #         os.remove(p)
-        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
-
-        graph = output()
-        return graph
-
+        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+            if os.path.isfile(p):
+                os.remove(p)
+        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
         # plt.show()
