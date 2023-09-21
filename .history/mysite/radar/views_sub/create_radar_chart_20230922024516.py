@@ -17,8 +17,6 @@ from scipy import stats
 from . import radar_chart_original as rco
 from . import solokill_and_steal as sas
 
-from django.conf import settings
-# settings.configure()
 
 # importの下は2行開ける
 np.set_printoptions(threshold=200)
@@ -35,8 +33,7 @@ CSV_FILE = sas.csv_file
 MIN_GAME_COUNT = 4
 DT_NOW = datetime.now()
 
-IMG_PATH = settings.MEDIA_ROOT # local
-# IMG_PATH = 'media/' # local
+IMG_PATH = 'media/' # local
 # IMG_PATH = 'static/radar/images/' # Render
 
 # コメントは変数の上に書く
@@ -363,15 +360,14 @@ class TopRadar(TopDataFrame):
                 horizontalalignment='left', color='black', size='16')
 
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
-
-        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-            if os.path.isfile(p):
-                os.remove(p)
+        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+        #     if os.path.isfile(p):
+        #         os.remove(p)
         # ブラウザキャッシュ対策に乱数を追加
-        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
 
-        # graph = output()
-        # return graph
+        graph = output()
+        return graph
 
         # plt.show()
 

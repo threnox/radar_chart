@@ -35,7 +35,7 @@ CSV_FILE = sas.csv_file
 MIN_GAME_COUNT = 4
 DT_NOW = datetime.now()
 
-IMG_PATH = settings.MEDIA_ROOT # local
+IMG_PATH = settings.MEDIA_URL # local
 # IMG_PATH = 'media/' # local
 # IMG_PATH = 'static/radar/images/' # Render
 

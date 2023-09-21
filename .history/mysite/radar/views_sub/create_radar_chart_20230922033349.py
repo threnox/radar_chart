@@ -18,7 +18,7 @@ from . import radar_chart_original as rco
 from . import solokill_and_steal as sas
 
 from django.conf import settings
-# settings.configure()
+
 
 # importの下は2行開ける
 np.set_printoptions(threshold=200)
