@@ -11,7 +11,7 @@ services:
     env: python
     region: singapore
     buildCommand: './build.sh'
-    startCommand: 'gunicorn mysite.wsgi:application -t 600 -k gthread'
+    startCommand: 'gunicorn mysite.wsgi:application -t 600'
     plan: free
     branch: forRender
     healthCheckPath: /
