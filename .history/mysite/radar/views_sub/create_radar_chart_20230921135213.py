@@ -30,10 +30,8 @@ sns.set_style('darkgrid', {'axes.edgecolor': '#bbbbd5'})
 CSV_FILE = sas.csv_file
 MIN_GAME_COUNT = 4
 DT_NOW = datetime.now()
-
-IMG_PATH = 'radar/static/radar/images/' # local
-# IMG_PATH = 'static/radar/images/' # Render
-
+# IMG_PATH = 'radar/static/radar/images/'
+IMG_PATH = 'static/radar/images/'
 # コメントは変数の上に書く
 BASE_DF = pd.read_csv(CSV_FILE, parse_dates=['date'])
 POSITION = ['top', 'jng', 'mid', 'bot', 'sup']

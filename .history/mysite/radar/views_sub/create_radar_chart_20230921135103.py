@@ -30,10 +30,8 @@ sns.set_style('darkgrid', {'axes.edgecolor': '#bbbbd5'})
 CSV_FILE = sas.csv_file
 MIN_GAME_COUNT = 4
 DT_NOW = datetime.now()
-
-IMG_PATH = 'radar/static/radar/images/' # local
-# IMG_PATH = 'static/radar/images/' # Render
-
+# IMG_PATH = 'radar/static/radar/images/'
+IMG_PATH = 'static/radar/images/'
 # コメントは変数の上に書く
 BASE_DF = pd.read_csv(CSV_FILE, parse_dates=['date'])
 POSITION = ['top', 'jng', 'mid', 'bot', 'sup']
@@ -636,7 +634,7 @@ class JngRadar(JngDataFrame):
         for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
-        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+        fig.savefig(f'radar/static/radar/images/radar_image{rnd}.png', bbox_inches=None)
         # plt.show()
 
 
@@ -723,7 +721,7 @@ class MidRadar(MidDataFrame):
         for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
-        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+        fig.savefig(f'radar/static/radar/images/radar_image{rnd}.png', bbox_inches=None)
         # plt.show()
 
 
@@ -811,7 +809,7 @@ class BotRadar(BotDataFrame):
         for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
-        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+        fig.savefig(f'radar/static/radar/images/radar_image{rnd}.png', bbox_inches=None)
         # plt.show()
 
 
@@ -900,5 +898,5 @@ class SupRadar(SupDataFrame):
         for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
-        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+        fig.savefig(f'radar/static/radar/images/radar_image{rnd}.png', bbox_inches=None)
         # plt.show()

@@ -1,0 +1,27 @@
+databases:
+  - name: radar_chart
+    region: singapore
+    plan: free
+    databaseName: radar_chart
+    user: threnox
+
+services:
+  - type: web
+    name: radar_chart
+    env: python
+    region: singapore
+    buildCommand: './build.sh'
+    startCommand: 'gunicorn mysite.wsgi:application -t 600'
+    plan: free
+    branch: forRender
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: radar_chart
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+    autoDeploy: true
