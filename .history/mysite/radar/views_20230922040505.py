@@ -19,7 +19,6 @@ def generator(request):
                 if position == 'top':
                     top = crc.TopRadar(league, split, min_game_count)
                     top.create_radar()
-                    print(settings.MEDIA_URL)
                 elif position == 'jungle':
                     jng = crc.JngRadar(league, split, min_game_count)
                     radar_image = jng.create_radar()

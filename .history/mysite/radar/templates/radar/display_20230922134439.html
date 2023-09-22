@@ -3,8 +3,8 @@
 {% block content %}
     <div class="display">
         <a href="{{ request.session.radar_image }}" target="_blank" rel="noopener">
-            <!-- data:image/svg+xml;base64,  -->
-            <img id="modal-content" class="display__radar-image" alt="generated_image" src="{{ request.session.radar_image }}" width="800" height="800">
+            <!-- data:image/png;base64,  -->
+            <img id="modal-content" class="display__radar-image" alt="generated_image" src="data:image/svg+xml;base64, {{ request.session.radar_image }}" width="800" height="800">
         </a>
         <p class="display__text">(Click image to expand)</p>
     </div>

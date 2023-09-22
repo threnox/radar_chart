@@ -18,8 +18,7 @@ def generator(request):
 
                 if position == 'top':
                     top = crc.TopRadar(league, split, min_game_count)
-                    top.create_radar()
-                    print(settings.MEDIA_URL)
+                    radar_image = top.create_radar()
                 elif position == 'jungle':
                     jng = crc.JngRadar(league, split, min_game_count)
                     radar_image = jng.create_radar()
@@ -32,9 +31,9 @@ def generator(request):
                 elif position == 'support':
                     sup = crc.SupRadar(league, split, min_game_count)
                     radar_image = sup.create_radar()
-                request.session['radar_image'] = settings.MEDIA_URL + 'radar_image' + crc.rnd + '.png'
+                # request.session['radar_image'] = settings.MEDIA_URL + 'radar_image' + crc.rnd + '.png'
                 # request.session['radar_image'] = '/radar_image' + crc.rnd + '.png'
-                # request.session['radar_image'] = radar_image
+                request.session['radar_image'] = radar_image
                 # return redirect('index') # urls.pyで定義したname
                 return redirect('radar:display') # urls.pyで定義したname
 

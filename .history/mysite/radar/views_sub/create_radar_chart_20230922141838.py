@@ -364,17 +364,17 @@ class TopRadar(TopDataFrame):
 
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
 
-        for p in glob.glob(f'.{IMG_PATH}radar_image*.png'):
-            if os.path.isfile(p):
-                os.remove(p)
+        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+        #     if os.path.isfile(p):
+        #         os.remove(p)
         # # ブラウザキャッシュ対策に乱数を追加
         # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
-        path = '.' + IMG_PATH + 'radar_image' + rnd + '.png' # '.'が必要
+        path = IMG_PATH + 'radar_image' + rnd + '.png'
         fig.savefig(path, bbox_inches=None)
 
         # graph = output()
         # return graph
-        print(path)
+        print(IMG_PATH)
 
         # plt.show()
 

@@ -57,17 +57,6 @@ top_solokill_count = np.array([])
 mid_solokill_count = np.array([])
 jng_steal_count = np.array([])
 
-# data:image/svg+xml;base64, 描画用
-def output():
-	buffer = BytesIO() # binary I/O (画像や音声データ向け)
-	plt.savefig(buffer, format='svg', bbox_inches=None)
-	buffer.seek(0) # ストリーム先頭のoffset byteに変更
-	img = buffer.getvalue() # よくわからんけど高速化？
-	graph = base64.b64encode(img) # base64でエンコード
-	graph = graph.decode('utf-8') # decodeして文字列から画像に変換
-	buffer.close()
-	return graph
-
 
 class OriginalDf:
 
@@ -277,6 +266,17 @@ class TopDataFrame(DataProcessing):
         return df
 
 
+def output():
+	buffer = BytesIO() # binary I/O (画像や音声データ向け)
+	plt.savefig(buffer, format='svg', bbox_inches=None)
+	buffer.seek(0) # ストリーム先頭のoffset byteに変更
+	img = buffer.getvalue() # よくわからんけど高速化？
+	graph = base64.b64encode(img) # base64でエンコード
+	graph = graph.decode('utf-8') # decodeして文字列から画像に変換
+	buffer.close()
+	return graph
+
+
 class TopRadar(TopDataFrame):
 
     def __init__(self, league, split, min_game_count=MIN_GAME_COUNT, playoffs=False):
@@ -364,17 +364,14 @@ class TopRadar(TopDataFrame):
 
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
 
-        for p in glob.glob(f'.{IMG_PATH}radar_image*.png'):
+        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
-        # # ブラウザキャッシュ対策に乱数を追加
-        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
-        path = '.' + IMG_PATH + 'radar_image' + rnd + '.png' # '.'が必要
-        fig.savefig(path, bbox_inches=None)
+        # ブラウザキャッシュ対策に乱数を追加
+        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
 
         # graph = output()
         # return graph
-        print(path)
 
         # plt.show()
 

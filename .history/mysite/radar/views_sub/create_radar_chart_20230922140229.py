@@ -36,6 +36,7 @@ MIN_GAME_COUNT = 4
 DT_NOW = datetime.now()
 
 IMG_PATH = settings.MEDIA_URL # local
+print(IMG_PATH)
 # IMG_PATH = 'media/' # local
 # IMG_PATH = 'static/radar/images/' # Render
 
@@ -364,17 +365,14 @@ class TopRadar(TopDataFrame):
 
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
 
-        for p in glob.glob(f'.{IMG_PATH}radar_image*.png'):
+        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
-        # # ブラウザキャッシュ対策に乱数を追加
-        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
-        path = '.' + IMG_PATH + 'radar_image' + rnd + '.png' # '.'が必要
-        fig.savefig(path, bbox_inches=None)
+        # ブラウザキャッシュ対策に乱数を追加
+        fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
 
         # graph = output()
         # return graph
-        print(path)
 
         # plt.show()
 
