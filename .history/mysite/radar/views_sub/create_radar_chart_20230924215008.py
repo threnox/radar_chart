@@ -60,7 +60,7 @@ jng_steal_count = np.array([])
 # data:image/svg+xml;base64, 描画用
 def output():
 	buffer = BytesIO() # binary I/O (画像や音声データ向け)
-	plt.savefig(buffer, format='png', bbox_inches=None)
+	plt.savefig(buffer, format='svg', bbox_inches=None)
 	buffer.seek(0) # ストリーム先頭のoffset byteに変更
 	img = buffer.getvalue()
 	graph = base64.b64encode(img) # base64でエンコード
@@ -362,12 +362,10 @@ class TopRadar(TopDataFrame):
                 horizontalalignment='left', color='black', size='16')
 
         if settings.DEBUG:
-        # ローカル環境では古い画像を削除、新しい画像を出力して保存
-            for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+            for p in glob.glob(f'{IMG_DIR}radar_image*.png'):
                 if os.path.isfile(p):
                     os.remove(p)
             fig.savefig(IMG_PATH, bbox_inches=None)
-        # 本番環境ではbase64でエンコードして表示
         else:
             graph = output()
             return graph

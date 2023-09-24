@@ -363,7 +363,7 @@ class TopRadar(TopDataFrame):
 
         if settings.DEBUG:
         # ローカル環境では古い画像を削除、新しい画像を出力して保存
-            for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+            for p in glob.glob(f'{IMG_DIR}radar_image*.png'):
                 if os.path.isfile(p):
                     os.remove(p)
             fig.savefig(IMG_PATH, bbox_inches=None)

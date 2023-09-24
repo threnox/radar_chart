@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+# from django.http import HttpResponse, HttpResponseRedirect, FileResponse, HttpResponseRedirect
 from .views_sub import create_radar_chart as crc
 from .forms import ParameterForm
 
@@ -49,9 +50,9 @@ def generator(request):
                         sup = crc.SupRadar(league, split, min_game_count)
                         radar_image = sup.create_radar()
                     request.session['radar_image'] = 'data:image/png;base64,' + radar_image
-
-                print(crc.IMG_PATH)
-                return redirect('radar:display') # urls.pyで定義したname
+                    # return redirect('index') # urls.pyで定義したname
+                    print(crc.IMG_PATH)
+                    return redirect('radar:display') # urls.pyで定義したname
 
     else:
         form = ParameterForm()

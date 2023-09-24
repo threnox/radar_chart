@@ -20,11 +20,11 @@ from . import solokill_and_steal as sas
 from django.conf import settings
 
 # importの下は2行開ける
-# np.set_printoptions(threshold=200)
-# pd.set_option('display.max_rows', 200)
-# pd.set_option('display.max_columns', 200)
-# pd.options.display.max_seq_items = 200
-# pd.options.display.float_format = None
+np.set_printoptions(threshold=200)
+pd.set_option('display.max_rows', 200)
+pd.set_option('display.max_columns', 200)
+pd.options.display.max_seq_items = 200
+pd.options.display.float_format = None
 
 sns.set_theme()
 sns.set_style('darkgrid', {'axes.edgecolor': '#bbbbd5'})
@@ -34,8 +34,8 @@ CSV_FILE = sas.csv_file
 MIN_GAME_COUNT = 4
 DT_NOW = datetime.now()
 
+# IMG_DIR = settings.MEDIA_URL
 IMG_DIR = settings.MEDIA_ROOT
-# ブラウザキャッシュ対策に乱数を追加
 RND = str(random.randint(0, 100000))
 IMG_PATH = IMG_DIR + '/radar_image' + RND + '.png'
 
@@ -60,9 +60,9 @@ jng_steal_count = np.array([])
 # data:image/svg+xml;base64, 描画用
 def output():
 	buffer = BytesIO() # binary I/O (画像や音声データ向け)
-	plt.savefig(buffer, format='png', bbox_inches=None)
+	plt.savefig(buffer, format='svg', bbox_inches=None)
 	buffer.seek(0) # ストリーム先頭のoffset byteに変更
-	img = buffer.getvalue()
+	img = buffer.getvalue() # よくわからんけど高速化？
 	graph = base64.b64encode(img) # base64でエンコード
 	graph = graph.decode('utf-8') # decodeして文字列から画像に変換
 	buffer.close()
@@ -361,18 +361,19 @@ class TopRadar(TopDataFrame):
                 'VSPM: Vision Score Per Minute',
                 horizontalalignment='left', color='black', size='16')
 
-        if settings.DEBUG:
-        # ローカル環境では古い画像を削除、新しい画像を出力して保存
-            for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
-                if os.path.isfile(p):
-                    os.remove(p)
-            fig.savefig(IMG_PATH, bbox_inches=None)
-        # 本番環境ではbase64でエンコードして表示
-        else:
-            graph = output()
-            return graph
-
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
+
+        for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+            if os.path.isfile(p):
+                os.remove(p)
+        # # ブラウザキャッシュ対策に乱数を追加
+        # fig.savefig(f'{IMG_PATH}radar_image{RND}.png', bbox_inches=None)
+        # IMG_PATH = IMG_DIR + 'radar_image' + RND + '.png'
+        fig.savefig(IMG_PATH, bbox_inches=None)
+
+        # graph = output()
+        # return graph
+
         # plt.show()
 
 
@@ -653,14 +654,13 @@ class JngRadar(JngDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        if settings.DEBUG:
-            for p in glob.glob(f'{IMG_DIR}radar_image*.png'):
-                if os.path.isfile(p):
-                    os.remove(p)
-            fig.savefig(f'{IMG_PATH}.png', bbox_inches=None)
-        else:
-            graph = output()
-            return graph
+        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+        #     if os.path.isfile(p):
+        #         os.remove(p)
+        # fig.savefig(f'{IMG_PATH}radar_image{RND}.png', bbox_inches=None)
+
+        graph = output()
+        return graph
 
         # plt.show()
 
