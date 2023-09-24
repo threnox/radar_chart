@@ -15,40 +15,40 @@ def generator(request):
                 position = request.POST['position_choice']
                 min_game_count = int(request.POST['min_games'])
 
-                # if settings.DEBUG:
-                if position == 'top':
-                    top = crc.TopRadar(league, split, min_game_count)
-                    top.create_radar()
-                elif position == 'jungle':
-                    jng = crc.JngRadar(league, split, min_game_count)
-                    jng.create_radar()
-                elif position == 'mid':
-                    mid = crc.MidRadar(league, split, min_game_count)
-                    mid.create_radar()
-                elif position == 'bot':
-                    bot = crc.BotRadar(league, split, min_game_count)
-                    bot.create_radar()
-                elif position == 'support':
-                    sup = crc.SupRadar(league, split, min_game_count)
-                    sup.create_radar()
-                request.session['radar_image'] = settings.MEDIA_URL + 'radar_image' + crc.RND + '.png'
-                # else:
-                #     if position == 'top':
-                #         top = crc.TopRadar(league, split, min_game_count)
-                #         radar_image = top.create_radar()
-                #     elif position == 'jungle':
-                #         jng = crc.JngRadar(league, split, min_game_count)
-                #         radar_image = jng.create_radar()
-                #     elif position == 'mid':
-                #         mid = crc.MidRadar(league, split, min_game_count)
-                #         radar_image = mid.create_radar()
-                #     elif position == 'bot':
-                #         bot = crc.BotRadar(league, split, min_game_count)
-                #         radar_image = bot.create_radar()
-                #     elif position == 'support':
-                #         sup = crc.SupRadar(league, split, min_game_count)
-                #         radar_image = sup.create_radar()
-                #     request.session['radar_image'] = 'data:image/png;base64,' + radar_image
+                if settings.DEBUG:
+                    if position == 'top':
+                        top = crc.TopRadar(league, split, min_game_count)
+                        top.create_radar()
+                    elif position == 'jungle':
+                        jng = crc.JngRadar(league, split, min_game_count)
+                        jng.create_radar()
+                    elif position == 'mid':
+                        mid = crc.MidRadar(league, split, min_game_count)
+                        mid.create_radar()
+                    elif position == 'bot':
+                        bot = crc.BotRadar(league, split, min_game_count)
+                        bot.create_radar()
+                    elif position == 'support':
+                        sup = crc.SupRadar(league, split, min_game_count)
+                        sup.create_radar()
+                    request.session['radar_image'] = settings.MEDIA_URL + 'radar_image' + crc.RND + '.png'
+                else:
+                    if position == 'top':
+                        top = crc.TopRadar(league, split, min_game_count)
+                        radar_image = top.create_radar()
+                    elif position == 'jungle':
+                        jng = crc.JngRadar(league, split, min_game_count)
+                        radar_image = jng.create_radar()
+                    elif position == 'mid':
+                        mid = crc.MidRadar(league, split, min_game_count)
+                        radar_image = mid.create_radar()
+                    elif position == 'bot':
+                        bot = crc.BotRadar(league, split, min_game_count)
+                        radar_image = bot.create_radar()
+                    elif position == 'support':
+                        sup = crc.SupRadar(league, split, min_game_count)
+                        radar_image = sup.create_radar()
+                    request.session['radar_image'] = 'data:image/png;base64,' + radar_image
 
                 print(crc.IMG_PATH)
                 return redirect('radar:display') # urls.pyで定義したname

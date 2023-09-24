@@ -654,15 +654,13 @@ class JngRadar(JngDataFrame):
                     horizontalalignment='left', color='black', size='16')
 
         if settings.DEBUG:
-            for p in glob.glob(f'{IMG_DIR}radar_image*.png'):
+            for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
                 if os.path.isfile(p):
                     os.remove(p)
-            fig.savefig(f'{IMG_PATH}.png', bbox_inches=None)
+            fig.savefig(IMG_PATH, bbox_inches=None)
         else:
             graph = output()
             return graph
-
-        # plt.show()
 
 
 class MidRadar(MidDataFrame):
@@ -745,15 +743,14 @@ class MidRadar(MidDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-        #     if os.path.isfile(p):
-        #         os.remove(p)
-        # fig.savefig(f'{IMG_PATH}radar_image{RND}.png', bbox_inches=None)
-
-        graph = output()
-        return graph
-
-        # plt.show()
+        if settings.DEBUG:
+            for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+                if os.path.isfile(p):
+                    os.remove(p)
+            fig.savefig(IMG_PATH, bbox_inches=None)
+        else:
+            graph = output()
+            return graph
 
 
 class BotRadar(BotDataFrame):
@@ -837,15 +834,14 @@ class BotRadar(BotDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-        #     if os.path.isfile(p):
-        #         os.remove(p)
-        # fig.savefig(f'{IMG_PATH}radar_image{RND}.png', bbox_inches=None)
-
-        graph = output()
-        return graph
-
-        # plt.show()
+        if settings.DEBUG:
+            for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+                if os.path.isfile(p):
+                    os.remove(p)
+            fig.savefig(IMG_PATH, bbox_inches=None)
+        else:
+            graph = output()
+            return graph
 
 
 class SupRadar(SupDataFrame):
@@ -930,12 +926,11 @@ class SupRadar(SupDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
-        #     if os.path.isfile(p):
-        #         os.remove(p)
-        # fig.savefig(f'{IMG_PATH}radar_image{RND}.png', bbox_inches=None)
-
-        graph = output()
-        return graph
-
-        # plt.show()
+        if settings.DEBUG:
+            for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+                if os.path.isfile(p):
+                    os.remove(p)
+            fig.savefig(IMG_PATH, bbox_inches=None)
+        else:
+            graph = output()
+            return graph

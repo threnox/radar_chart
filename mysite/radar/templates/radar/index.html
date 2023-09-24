@@ -5,10 +5,15 @@
         {% csrf_token %}
         <div class="form__inner">
             <table class="pulldown">{{ form.as_table }}</table>
-            <button type="submit" name="generate", id="btn" class="btn">Generate</button>
+            <button type="submit" name="generate" id="btn" class="btn">Generate</button>
+            <p class="form__note">It takes about 1 minute.</p>
         </div>
     </form>
     <section class="source">
+        <h2 class="source__title">Sample Image</h2>
+        <div class="source__sample">
+            <img src="{% static 'radar/images/radar_image_sample.png' %}" alt="sample-image" class="source__sample-image">
+        </div>
         <h2 class="source__title">calculated from</h2>
         <ul>
             <li>LCK 2023 Spring, Summer Season</li>
