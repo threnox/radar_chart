@@ -37,7 +37,7 @@ DT_NOW = datetime.now()
 # IMG_DIR = settings.MEDIA_URL
 IMG_DIR = settings.MEDIA_ROOT
 RND = str(random.randint(0, 100000))
-IMG_PATH = IMG_DIR + '/radar_image' + RND + '.png'
+IMG_PATH = IMG_DIR + 'radar_image' + RND + '.png'
 
 # コメントは変数の上に書く
 BASE_DF = pd.read_csv(CSV_FILE, parse_dates=['date'])
@@ -363,7 +363,7 @@ class TopRadar(TopDataFrame):
 
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
 
-        for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+        for p in glob.glob(f'{IMG_DIR}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
         # # ブラウザキャッシュ対策に乱数を追加

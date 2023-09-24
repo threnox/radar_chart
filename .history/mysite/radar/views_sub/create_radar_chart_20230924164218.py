@@ -363,7 +363,7 @@ class TopRadar(TopDataFrame):
 
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
 
-        for p in glob.glob(f'{IMG_DIR}/radar_image*.png'):
+        for p in glob.glob(f'{IMG_DIR}radar_image*.png'):
             if os.path.isfile(p):
                 os.remove(p)
         # # ブラウザキャッシュ対策に乱数を追加

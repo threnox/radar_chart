@@ -1,16 +1,24 @@
+import glob
+import os
+import random
+
 import numpy as np
 import pandas as pd
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('Agg') # バックエンド指定
 from matplotlib import pyplot as plt
 import seaborn as sns
+import base64
+from io import BytesIO
 from collections import Counter
 from datetime import datetime
 from scipy import stats
 
-import radar.views_sub.radar_chart_original as rco
-import radar.views_sub.solokill_and_steal as sas
+from . import radar_chart_original as rco
+from . import solokill_and_steal as sas
 
+from django.conf import settings
+# settings.configure()
 
 # importの下は2行開ける
 np.set_printoptions(threshold=200)
@@ -24,13 +32,15 @@ sns.set_style('darkgrid', {'axes.edgecolor': '#bbbbd5'})
 
 # global変数は大文字にする
 CSV_FILE = sas.csv_file
-MIN_GAME_COUNT = 3
+MIN_GAME_COUNT = 4
 DT_NOW = datetime.now()
+
+# IMG_PATH = settings.MEDIA_URL
+IMG_PATH = './radar/views_sub/images/' # local
+
 # コメントは変数の上に書く
 BASE_DF = pd.read_csv(CSV_FILE, parse_dates=['date'])
 POSITION = ['top', 'jng', 'mid', 'bot', 'sup']
-# # for use .str accessor
-# POSITION_ORDER = {'top': str(0), 'jng': str(1), 'mid':str(2), 'bot': str(3), 'sup': str(4)}
 BASE_STATS = ['playername', 'teamname', 'position', 'kills', 'deaths', 'assists', 'teamkills', 'firstbloodkill', 'firstbloodassist',
               'damagetochampions', 'dpm', 'wpm', 'wcpm', 'visionscore', 'vspm',
               'totalgold', 'earnedgold', 'earned gpm', 'total cs', 'cspm',
@@ -46,6 +56,17 @@ top_solokill_count = np.array([])
 mid_solokill_count = np.array([])
 jng_steal_count = np.array([])
 
+# data:image/svg+xml;base64, 描画用
+def output():
+	buffer = BytesIO() # binary I/O (画像や音声データ向け)
+	plt.savefig(buffer, format='svg', bbox_inches=None)
+	buffer.seek(0) # ストリーム先頭のoffset byteに変更
+	img = buffer.getvalue() # よくわからんけど高速化？
+	graph = base64.b64encode(img) # base64でエンコード
+	graph = graph.decode('utf-8') # decodeして文字列から画像に変換
+	buffer.close()
+	return graph
+
 
 class OriginalDf:
 
@@ -58,32 +79,52 @@ class OriginalDf:
         self.columns = BASE_DF.columns
         self.values = BASE_DF.values
 
-        global top_solokill_count, mid_solokill_count, jng_steal_count
+        global top_solokill_count, mid_solokill_count, jng_steal_count, rnd
+        rnd = str(random.randint(0, 100000))
+
         if self.league == 'LCK':
-            top_solokill_count = sas.LCK_top_solokill
-            mid_solokill_count = sas.LCK_mid_solokill
-            jng_steal_count = sas.LCK_jng_steal
+            if self.split == 'Spring':
+                top_solokill_count = sas.LCK_top_solokill_spring
+                mid_solokill_count = sas.LCK_mid_solokill_spring
+                jng_steal_count = sas.LCK_jng_steal_spring
+            elif self.split == 'Summer':
+                top_solokill_count = sas.LCK_top_solokill_summer
+                mid_solokill_count = sas.LCK_mid_solokill_summer
+                jng_steal_count = sas.LCK_jng_steal_summer
         elif self.league == 'LEC':
-            top_solokill_count = sas.LEC_top_solokill
-            mid_solokill_count = sas.LEC_mid_solokill
-            jng_steal_count = sas.LEC_jng_steal
+            if self.split == 'Winter':
+                top_solokill_count = sas.LEC_top_solokill_winter
+                mid_solokill_count = sas.LEC_mid_solokill_winter
+                jng_steal_count = sas.LEC_jng_steal_winter
+            elif self.split == 'Spring':
+                top_solokill_count = sas.LEC_top_solokill_spring
+                mid_solokill_count = sas.LEC_mid_solokill_spring
+                jng_steal_count = sas.LEC_jng_steal_spring
+            elif self.split == 'Summer':
+                top_solokill_count = sas.LEC_top_solokill_summer
+                mid_solokill_count = sas.LEC_mid_solokill_summer
+                jng_steal_count = sas.LEC_jng_steal_summer
         elif self.league == 'LJL':
-            top_solokill_count = sas.LJL_top_solokill
-            mid_solokill_count = sas.LJL_mid_solokill
-            jng_steal_count = sas.LJL_jng_steal
-        elif self.league == 'LPL':
-            top_solokill_count = sas.LPL_top_solokill
-            mid_solokill_count = sas.LPL_mid_solokill
-            jng_steal_count = sas.LPL_jng_steal
+            if self.split == 'Spring':
+                top_solokill_count = sas.LJL_top_solokill_spring
+                mid_solokill_count = sas.LJL_mid_solokill_spring
+                jng_steal_count = sas.LJL_jng_steal_spring
+            elif self.split == 'Summer':
+                top_solokill_count = sas.LJL_top_solokill_summer
+                mid_solokill_count = sas.LJL_mid_solokill_summer
+                jng_steal_count = sas.LJL_jng_steal_summer
 
     def extract(self): # クラス内メソッドの間は1行開ける
         df = BASE_DF.query(
             '(league == @self.league) & (split == @self.split) & (playoffs == @self.playoffs)')
-        df = df.replace({'playername': {'Nesuty': 'Nesty'}})
         # 誤植箇所の修正
+        df = df.replace({'playername': {'Nesuty': 'Nesty'}})
         return df
 
     def get_games_played(self):
+        """Calculate the number of games played per lane.
+        Create with MultiIndex to apply players who played multiple lanes.
+        """
         games_played = []
         for pos in POSITION:
             game_counts = self.extract().query('position == @pos')['playername'].value_counts()
@@ -94,8 +135,6 @@ class OriginalDf:
             games_played.append(temp)
         df = pd.concat(games_played)
         df.index.names = ['playername', 'position']
-        # レーンごとにプレイゲーム数を算出
-        # 複数レーンをプレイしたプレイヤーに対応するためMultiIndexで作成
         return df
 
 
@@ -109,12 +148,13 @@ class DataProcessing(OriginalDf):
         df = self.extract().loc[:, BASE_STATS].groupby(
             by=['playername', 'teamname', 'position']).agg('sum', numeric_only=True)
         df = df.join(self.get_games_played())
-        df.sort_index(level=['teamname', 'playername'], inplace=True, key=lambda x: x.str.lower())
         # チーム名順にソート（チーム名が空欄のAverageを最後にするため）
+        df.sort_index(level=['teamname', 'playername'], inplace=True, key=lambda x: x.str.lower())
         return df
 
     def create_solokill(self):
         global top_players, jng_players, mid_players, bot_players, sup_players
+        # 大文字小文字に対処しつつ名前順にソート
         top_players = self.make_groups().query(
             '(position == "top") & (teamname != "" "")'
             ).index.get_level_values('playername').sort_values(key=lambda x: x.str.lower())
@@ -130,27 +170,26 @@ class DataProcessing(OriginalDf):
         sup_players = self.make_groups().query(
             '(position == "sup") & (teamname != "" "")'
             ).index.get_level_values('playername').sort_values(key=lambda x: x.str.lower())
-        # 大文字小文字に対処しつつ名前順にソート
 
         try:
+            # position指定で複数レーンプレイヤーに対処
             top_solokill = pd.DataFrame(
                 {'solokill': top_solokill_count, 'position': 'top'}, index=top_players)
-            # position指定で複数レーンプレイヤーに対処
             mid_solokill = pd.DataFrame(
                 {'solokill': mid_solokill_count, 'position': 'mid'}, index=mid_players)
         except ValueError:
             print('solokill count is not correct.')
 
         solokill = pd.concat([top_solokill, mid_solokill])
-        solokill.set_index('position', append=True, inplace=True)
         # マルチインデックスとしてpositionを追加
+        solokill.set_index('position', append=True, inplace=True)
 
+        # プレイヤー数とカウント数の確認
         try:
             steal = pd.DataFrame(
                 {'steal': jng_steal_count, 'position': 'jng'}, index=jng_players)
         except ValueError:
             print('steal count is not correct.')
-        # プレイヤー数とカウント数の確認
 
         steal.set_index('position', append=True, inplace=True)
         return solokill, steal
@@ -165,29 +204,30 @@ class DataProcessing(OriginalDf):
         for pos in POSITION:
             df_total.loc[('Average', '', pos), :] = df_total.query('position == @pos').agg('sum', numeric_only=True)
         df_average = df_total.div(df_total['games_played'], axis=0)
-        df_average['games_played'] = df_total['games_played']
         # ゲーム数だけ平均値ではなく合計値に戻す
+        # ゲーム数で割る前だと処理が面倒なのでdivした後でやる
+        df_average['games_played'] = df_total['games_played']
         df_average['KDA'] = (df_total['kills'] + df_total['assists']) / df_total['deaths']
         df_average['KP'] = (df_total['kills'] + df_total['assists'])*100 / df_total['teamkills']
         df_average['DPG'] = df_total['damagetochampions']*100 / df_total['totalgold']
         df_average['FB'] = (df_total['firstbloodkill'] + df_total['firstbloodassist'])*100 / df_total['games_played']
-        # ゲーム数で割る前だと処理が面倒なのでdivの後でやる
+        # 最少ゲーム数を設定
         df_average.drop(
             df_average.index[df_average['games_played'] < self.min_game_count], axis=0, inplace=True)
-        # 最少ゲーム数を設定
         return df_average
 
 
 class TopDataFrame(DataProcessing):
 
     def get_top(self):
-        df = self.get_average().xs('top', level='position').copy()
         # SettingWithCopyWarning対策
+        df = self.get_average().xs('top', level='position').copy()
         df = df.loc[:, TOP_STATS]
         return df
 
     def make_top_labels(self):
-        # プロットする数値の有効数字を調整
+        """Adjust the significant figures of plotting number
+        """
         df = self.get_top().round({
             'golddiffat15': 0,
             'xpdiffat15': 0,
@@ -220,19 +260,19 @@ class TopDataFrame(DataProcessing):
             df[col] = df[col].map(func_add_colname)
 
         df['KP'] = df['KP'] + '%'
+        # columnsの順番を見やすく変更
         df = df.reindex(columns=
             ['KDA', 'SoloKill', 'KP', 'DPM', 'EGPM', 'GD15', 'XPD15', 'CSD15'])
-        # columnsの順番を変更
         return df
 
     def standardize_top(self):
         # rounded前のdfを標準化して偏差値に変換
-        # レーダーチャートのプロットは偏差値でおこなう
+        # レーダーチャートのプロットは偏差値で
         df = stats.zscore(self.get_top(), axis=0)
         df = df.apply(lambda x: x*10 + 50)
+        # 順番をレーダーチャートに合わせる
         df = df.reindex(columns=
             ['KDA', 'solokill', 'KP', 'dpm', 'earned gpm', 'golddiffat15', 'xpdiffat15', 'csdiffat15'])
-        # 順番をレーダーチャートに合わせる
         return df
 
 
@@ -242,15 +282,15 @@ class TopRadar(TopDataFrame):
         super().__init__(league, split, min_game_count, playoffs)
         self.n = 8
         self.team = {}
+        # プレイヤー名とチーム名の辞書を作成
         for key, value in self.make_top_labels().index:
             self.team[key] = value
-        # プレイヤー名とチーム名の辞書を作成
-        self.players = self.make_top_labels().reset_index('teamname').index
         # top_playersだとAverageがないので新しく作成
+        self.players = self.make_top_labels().reset_index('teamname').index
+        # radar_chart.pyのdata形式に合わせる
         temp_values = self.standardize_top().values.tolist()
         self.values = [[temp_values[i], temp_values[-1]] for i in range(len(temp_values))]
         self.labels = self.make_top_labels().values.tolist()
-        # radar_chart.pyのdata形式に合わせる
 
     def create_radar(self, file_name=str(DT_NOW.strftime('%m')) + str(DT_NOW.strftime('%d'))):
         # axis_off, fig.suptitle, figsize, ax.set_xticklabels, fig.text, fig.savefigは随時調整
@@ -267,11 +307,9 @@ class TopRadar(TopDataFrame):
 
         player_count = Counter(self.get_total().index.get_level_values('playername'))
         multi_player = [k for k, v in player_count.items() if v > 1]
+
         for p in multi_player:
             print(p + ' has played in multiple lanes.')
-        # if len(set(self.get_total().index.get_level_values('playername')))\
-        #     != len(self.get_total().index.get_level_values('playername')):
-        #     print('Some players have played in multiple lanes.')
 
         if len(self.players) >= 17:
             print('Too many players to show')
@@ -293,8 +331,6 @@ class TopRadar(TopDataFrame):
             axs[2, 3].axis('off')
             axs[2, 2].axis('off')
             axs[2, 1].axis('off')
-
-        # fig.subplots_adjust(wspace=0.6, hspace=0.06, top=0.88, right=0.95, bottom=0, left=0.05)
 
         colors = ['b', 'r']
         alphas = [0.95, 0.2]
@@ -326,7 +362,17 @@ class TopRadar(TopDataFrame):
                 horizontalalignment='left', color='black', size='16')
 
         # fig.savefig(f'2023{self.league}_{self.split}_top{file_name}.png', bbox_inches=None)
-        fig.savefig('radar/static/radar/test_image.png', bbox_inches=None)
+
+        for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+            if os.path.isfile(p):
+                os.remove(p)
+        # # ブラウザキャッシュ対策に乱数を追加
+        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+        path = '.' + IMG_PATH + 'radar_image' + rnd + '.png'
+        fig.savefig(path, bbox_inches=None)
+
+        # graph = output()
+        # return graph
 
         # plt.show()
 
@@ -433,6 +479,7 @@ class MidDataFrame(DataProcessing):
 
 
 class BotDataFrame(DataProcessing):
+
     def get_bot(self):
         df = self.get_average().xs('bot', level='position').copy()
         df = df.loc[:, BOT_STATS]
@@ -484,6 +531,7 @@ class BotDataFrame(DataProcessing):
 
 
 class SupDataFrame(DataProcessing):
+
     def get_sup(self):
         df = self.get_average().xs('sup', level='position').copy()
         df = df.loc[:, SUP_STATS]
@@ -553,11 +601,9 @@ class JngRadar(JngDataFrame):
 
         player_count = Counter(self.get_total().index.get_level_values('playername'))
         multi_player = [k for k, v in player_count.items() if v > 1]
+
         for p in multi_player:
             print(p + ' has played in multiple lanes.')
-        # if len(set(self.get_total().index.get_level_values('playername')))\
-        #     != len(self.get_total().index.get_level_values('playername')):
-        #     print('Some players have played in multiple lanes.')
 
         if len(self.players) >= 17:
             print('Too many players to show')
@@ -579,8 +625,6 @@ class JngRadar(JngDataFrame):
             axs[2, 3].axis('off')
             axs[2, 2].axis('off')
             axs[2, 1].axis('off')
-
-        # fig.subplots_adjust(wspace=0.6, hspace=0.06, top=0.88, right=0.95, bottom=0, left=0.05)
 
         colors = ['b', 'r']
         alphas = [0.95, 0.2]
@@ -610,7 +654,13 @@ class JngRadar(JngDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        fig.savefig(f'2023{self.league}_{self.split}_jng{file_name}.png', bbox_inches=None)
+        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+        #     if os.path.isfile(p):
+        #         os.remove(p)
+        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+
+        graph = output()
+        return graph
 
         # plt.show()
 
@@ -642,11 +692,9 @@ class MidRadar(MidDataFrame):
 
         player_count = Counter(self.get_total().index.get_level_values('playername'))
         multi_player = [k for k, v in player_count.items() if v > 1]
+
         for p in multi_player:
             print(p + ' has played in multiple lanes.')
-        # if len(set(self.get_total().index.get_level_values('playername')))\
-        #     != len(self.get_total().index.get_level_values('playername')):
-        #     print('Some players have played in multiple lanes.')
 
         if len(self.players) >= 17:
             print('Too many players to show')
@@ -668,8 +716,6 @@ class MidRadar(MidDataFrame):
             axs[2, 3].axis('off')
             axs[2, 2].axis('off')
             axs[2, 1].axis('off')
-
-        # fig.subplots_adjust(wspace=0.6, hspace=0.24, top=0.88, right=0.95, bottom=0, left=0.05)
 
         colors = ['b', 'r']
         alphas = [0.95, 0.2]
@@ -699,7 +745,13 @@ class MidRadar(MidDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        fig.savefig(f'2023{self.league}_{self.split}_mid{file_name}.png', bbox_inches=None)
+        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+        #     if os.path.isfile(p):
+        #         os.remove(p)
+        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+
+        graph = output()
+        return graph
 
         # plt.show()
 
@@ -731,11 +783,9 @@ class BotRadar(BotDataFrame):
 
         player_count = Counter(self.get_total().index.get_level_values('playername'))
         multi_player = [k for k, v in player_count.items() if v > 1]
+
         for p in multi_player:
             print(p + ' has played in multiple lanes.')
-        # if len(set(self.get_total().index.get_level_values('playername')))\
-        #     != len(self.get_total().index.get_level_values('playername')):
-        #     print('Some players have played in multiple lanes.')
 
         if len(self.players) >= 17:
             print('Too many players to show')
@@ -757,8 +807,6 @@ class BotRadar(BotDataFrame):
             axs[2, 3].axis('off')
             axs[2, 2].axis('off')
             axs[2, 1].axis('off')
-
-        # fig.subplots_adjust(wspace=0.6, hspace=0.06, top=0.88, right=0.95, bottom=0, left=0.05)
 
         colors = ['b', 'r']
         alphas = [0.95, 0.2]
@@ -789,7 +837,13 @@ class BotRadar(BotDataFrame):
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
 
-        fig.savefig(f'2023{self.league}_{self.split}_bot{file_name}.png', bbox_inches=None)
+        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+        #     if os.path.isfile(p):
+        #         os.remove(p)
+        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+
+        graph = output()
+        return graph
 
         # plt.show()
 
@@ -821,11 +875,9 @@ class SupRadar(SupDataFrame):
 
         player_count = Counter(self.get_total().index.get_level_values('playername'))
         multi_player = [k for k, v in player_count.items() if v > 1]
+
         for p in multi_player:
             print(p + ' has played in multiple lanes.')
-        # if len(set(self.get_total().index.get_level_values('playername')))\
-        #     != len(self.get_total().index.get_level_values('playername')):
-        #     print('Some players have played in multiple lanes.')
 
         if len(self.players) >= 17:
             print('Too many players to show')
@@ -848,8 +900,6 @@ class SupRadar(SupDataFrame):
             axs[2, 2].axis('off')
             axs[2, 1].axis('off')
 
-        # fig.subplots_adjust(wspace=0.6, hspace=0.06, top=0.88, right=0.95, bottom=0, left=0.05)
-
         colors = ['b', 'r']
         alphas = [0.95, 0.2]
         linewidths = [2.0, 0.5]
@@ -866,11 +916,12 @@ class SupRadar(SupDataFrame):
                 ax.plot(theta, d, color=color, alpha=alpha, linewidth=linewidth)
                 ax.fill(theta, d, facecolor=color, alpha=alpha, label='_nolegend_')
             ax.set_xticks(theta)
-            ax.set_xticklabels(label, position=(0.0, -0.09), size=14, color='black')
             # Supだけちょっと広め
+            ax.set_xticklabels(label, position=(0.0, -0.09), size=14, color='black')
 
         fig.suptitle(x=0.5, y=0.97, t=f'2023 {self.league} {self.split} SUP Stats',
                     horizontalalignment='center', color='black', weight='bold', size='30')
+
         if len(self.players) <= 11 or 13 <= len(self.players) < 16:
             fig.text(0.77, 0.05,
                     'DPM: Damage Per Minute''\n'
@@ -878,7 +929,13 @@ class SupRadar(SupDataFrame):
                     'EGPM: Earned Gold Per Minute''\n'
                     'VSPM: Vision Score Per Minute',
                     horizontalalignment='left', color='black', size='16')
-        fig.savefig(
-            f'2023{self.league}_{self.split}_sup{file_name}.png', bbox_inches=None)
+
+        # for p in glob.glob(f'{IMG_PATH}radar_image*.png'):
+        #     if os.path.isfile(p):
+        #         os.remove(p)
+        # fig.savefig(f'{IMG_PATH}radar_image{rnd}.png', bbox_inches=None)
+
+        graph = output()
+        return graph
 
         # plt.show()

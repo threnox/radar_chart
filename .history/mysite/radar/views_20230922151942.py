@@ -32,8 +32,8 @@ def generator(request):
                 elif position == 'support':
                     sup = crc.SupRadar(league, split, min_game_count)
                     radar_image = sup.create_radar()
-                request.session['radar_image'] = settings.MEDIA_URL + 'radar_image' + crc.RND + '.png'
-                # request.session['radar_image'] = crc.IMG_PATH
+                # request.session['radar_image'] = settings.MEDIA_ROOT + 'radar_image' + crc.rnd + '.png'
+                request.session['radar_image'] = '/radar_image' + crc.rnd + '.png'
                 # request.session['radar_image'] = radar_image
                 # return redirect('index') # urls.pyで定義したname
                 return redirect('radar:display') # urls.pyで定義したname
