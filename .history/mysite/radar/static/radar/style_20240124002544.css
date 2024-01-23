@@ -44,7 +44,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
     background-blend-mode: lighten;
 }
 .wrapper {
@@ -149,23 +149,20 @@ body {
     border-color: #00E4BF;
     cursor: pointer;
 }
-.sample, .info, .note{
-    position: relative;
+.sample, .info {
     max-width: 800px;
     height: 100%;
-    margin: 2rem auto;
+    margin: 2rem auto 0;
     padding: 2rem 1rem;
     font-size: 0.9rem;
-    /* text-align: center; */
+    text-align: center;
 }
 .sample {
     background-color: rgb(0, 228, 191, 0.167);
     background-blend-mode: lighten;
 }
-.sample__title, .info__title, .note__title{
-    font-family: "Roboto Slab";
+.sample__title, .info__title {
     font-size: 1.4rem;
-    text-align: center;
 }
 .sample__img {
     margin: 1rem 0 3rem;
@@ -175,20 +172,6 @@ body {
     width: 90%;
     height: 100%;
     margin: 0 auto;
-}
-.info {
-    margin: 2rem auto 8rem;
-}
-.info__text {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
-    list-style: disc;
-}
-.note__title {
-    /* font-weight: 700; */
-    text-decoration: underline;
-    /* list-style: none; */
 }
 .display__radar-image {
     display: block;

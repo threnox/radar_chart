@@ -149,7 +149,7 @@ body {
     border-color: #00E4BF;
     cursor: pointer;
 }
-.sample, .info, .note{
+.sample, .info {
     position: relative;
     max-width: 800px;
     height: 100%;
