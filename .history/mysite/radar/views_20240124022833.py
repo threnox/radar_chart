@@ -14,13 +14,13 @@ def generator(request):
                 league = request.POST['region_choice']
                 split = request.POST['season_choice']
                 position = request.POST['position_choice']
-                position = position.replace('jungle', 'jng').replace('support', 'sup')
                 min_game_count = int(request.POST['min_games'])
+                position = position.replace('jungle', 'jng').replace('support', 'sup')
 
                 if settings.DEBUG: # localでは画像を生成して表示
                     chart = grc.GenerateRadar(league, split, position, min_game_count)
                     chart.generate_radar()
-                    # if position == 'top': # Old ver.
+                    # if position == 'top':
                     #     top = crc.TopRadar(league, split, min_game_count)
                     #     top.create_radar()
                     # elif position == 'jungle':
@@ -39,7 +39,7 @@ def generator(request):
                 else: # 本番環境ではbase64でエンコードして表示
                     chart = grc.GenerateRadar(league, split, position, min_game_count)
                     radar_image = chart.generate_radar()
-                    # if position == 'top': # Old ver.
+                    # if position == 'top':
                     #     top = crc.TopRadar(league, split, min_game_count)
                     #     radar_image = top.create_radar()
                     # elif position == 'jungle':

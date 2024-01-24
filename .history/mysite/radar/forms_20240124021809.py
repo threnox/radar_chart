@@ -10,7 +10,7 @@ class ParameterForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(ParameterForm, self).__init__(*args, **kwargs)
-        self.fields['min_games'].initial = 4 # doesn't work
+        self.fields['min_games'].initial = 3 # doesn't work
 
     region_choice = forms.ChoiceField(widget=forms.Select, choices=region, initial='', label='region')
     season_choice = forms.ChoiceField(widget=forms.Select, choices=season, initial='', label='season')

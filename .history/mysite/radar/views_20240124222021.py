@@ -35,7 +35,7 @@ def generator(request):
                     # elif position == 'support':
                     #     sup = crc.SupRadar(league, split, min_game_count)
                     #     sup.create_radar()
-                    request.session['radar_image'] = settings.MEDIA_URL + 'radar_image' + grc.RND + '.png'
+                    request.session['radar_image'] = 'mysite' + settings.MEDIA_URL + 'radar_image' + grc.RND + '.png'
                 else: # 本番環境ではbase64でエンコードして表示
                     chart = grc.GenerateRadar(league, split, position, min_game_count)
                     radar_image = chart.generate_radar()
